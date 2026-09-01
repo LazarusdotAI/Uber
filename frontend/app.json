@@ -1,0 +1,78 @@
+{
+  "expo": {
+    "name": "GigVerdict",
+    "slug": "frontend",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "frontend",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.emergent.offerintel.qjpqzy",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Scan offer screenshots to score delivery offers",
+        "NSLocationWhenInUseUsageDescription": "Show nearby zones and best repositioning moves"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#0D0E12"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.emergent.offerintel.qjpqzy",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "READ_MEDIA_IMAGES"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-image.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0D0E12"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Scan offer screenshots to score delivery offers"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Show nearby zones and best repositioning moves"
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/BarlowCondensed-Medium.ttf",
+            "./assets/fonts/BarlowCondensed-SemiBold.ttf",
+            "./assets/fonts/BarlowCondensed-Bold.ttf",
+            "./assets/fonts/DMSans-Regular.ttf",
+            "./assets/fonts/DMSans-Medium.ttf",
+            "./assets/fonts/DMSans-Bold.ttf"
+          ]
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

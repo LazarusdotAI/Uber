@@ -1,0 +1,168 @@
+{
+  "app_name": "GigVerdict",
+  "personality": "7 Dark-First Utility DARK",
+  "personality_one_liner": "A high-contrast, tactical command center combining automotive instrument cluster readability with trading terminal precision, built for split-second driver decisions.",
+  "color": {
+    "surface": "#0D0E12",
+    "onSurface": "#F2F4F7",
+    "surfaceSecondary": "#1A1D24",
+    "onSurfaceSecondary": "#A0AAB5",
+    "surfaceTertiary": "#262A33",
+    "onSurfaceTertiary": "#C0C8D1",
+    "surfaceInverse": "#F2F4F7",
+    "onSurfaceInverse": "#0D0E12",
+    "brand": "#FFB020",
+    "brandPrimary": "#FFB020",
+    "onBrandPrimary": "#1A1100",
+    "brandSecondary": "#CC8C1A",
+    "onBrandSecondary": "#1A1100",
+    "brandTertiary": "#332306",
+    "onBrandTertiary": "#FFD980",
+    "success": "#00E676",
+    "onSuccess": "#00331A",
+    "warning": "#FFC400",
+    "onWarning": "#332700",
+    "error": "#FF3D00",
+    "onError": "#330C00",
+    "info": "#00B0FF",
+    "onInfo": "#002333",
+    "border": "#2E3440",
+    "borderStrong": "#4C566A",
+    "divider": "#20242C"
+  },
+  "typography": {
+    "displayFontFamily": "Barlow Condensed",
+    "textFontFamily": "DM Sans",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24,
+      "3xl": 32,
+      "4xl": 48,
+      "5xl": 64
+    }
+  },
+  "spacing": {
+    "rule": "Generous margin (lg/xl) around massive touch targets (min 76x76dp for primary driving actions), tight padding inside dense metric rows. Never cramp touchable areas.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 6,
+    "md": 12,
+    "lg": 20,
+    "pill": 999
+  },
+  "shadow_tier": "0",
+  "navigation": "bottom_tabs",
+  "icon_set": "Phosphor",
+  "glassmorphism": {
+    "enabled": "false",
+    "do's": [
+      "Use solid surfaceSecondary with tonal separation.",
+      "Prioritize absolute clarity and contrast over aesthetic blur, as the user is driving."
+    ],
+    "dont's": [
+      "No blur or glass on metric cards, dashboards, or primary buttons.",
+      "Do not use translucent layers that could reduce high-speed legibility."
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Home Dashboard",
+      "purpose": "A live operational surface tracking shift performance, earnings, and acting as the gateway to scan/enter offers.",
+      "states": {
+        "loading": "Dark skeleton loaders in the shape of the stat grid.",
+        "empty": "N/A - Defaults to '$0.00 / 0 mi' when shift hasn't started.",
+        "error": "Amber warning banner below header: 'GPS/Data connection lost. Retrying...'"
+      },
+      "layout": "Top: Current shift status pill. Center: Massive 'START SHIFT' (brandPrimary) button. Below: 2x2 grid of heavy metric cards (Net, $/hr, $/mile, Goal) using Barlow Condensed. Bottom floating area: 'SCAN OFFER' / 'ENTER OFFER' massive split-buttons anchored above the tab bar."
+    },
+    {
+      "name": "Verdict Screen",
+      "purpose": "Provides a split-second, extremely high-contrast 'TAKE IT', 'MAYBE', or 'DECLINE' decision for incoming offers.",
+      "states": {
+        "loading": "Full-screen pulsing radar or scanning animation (Amber).",
+        "empty": "N/A - Only appears when an offer is active.",
+        "error": "Red banner: 'Could not parse screenshot, please enter manually.' + Large Retry button."
+      },
+      "layout": "Full-screen modal. The background is tinted heavily by the verdict color (success/warning/error at 15% opacity over surface, with thick border). Top: Massive Verdict Title ('🟢 TAKE IT'). Middle: Gigantic metrics ($11.26 / 4.7 mi / 22 min) in Barlow Condensed. Bottom: Bulleted 'WHY' list using Phosphor icons. Actions: 'Dismiss' button at the bottom."
+    },
+    {
+      "name": "Map & Zones",
+      "purpose": "Dark-mode map showing hot, neutral, and dead zones with smart repositioning.",
+      "states": {
+        "loading": "Centered Amber spinner over dark map placeholder.",
+        "empty": "Map centered on user with 'No zone data available in this area' pill.",
+        "error": "Center modal: 'Location access required for zones.' + Enable CTA."
+      },
+      "layout": "Full-bleed map with dark custom styling. Colored GPS radius circles (Amber/Red/Green) indicating zone profitability. A bottom sheet (surfaceSecondary) shows 'Best Current Zone' and 'Smart Repositioning' suggestions with distance and ETA."
+    },
+    {
+      "name": "History & Analytics",
+      "purpose": "Trading-style ledger of past offers, accepted/declined rates, and temporal intelligence.",
+      "states": {
+        "loading": "List skeleton with alternating row colors.",
+        "empty": "Abstract dark financial chart illustration + 'No offers recorded yet. Start your first shift!'",
+        "error": "Standard error state with 'Retry' button."
+      },
+      "layout": "Header: Segmented control (Offers / Shifts / Zones). Body: High-density list. Each row displays the payout, time, and a hard-edged colored badge (Green/Yellow/Red) denoting the verdict/action taken."
+    },
+    {
+      "name": "Settings",
+      "purpose": "Configure algorithmic thresholds (fuel, MPG, presets) using large, tactile controls.",
+      "states": {
+        "loading": "Spinner.",
+        "empty": "N/A",
+        "error": "Failed to save settings alert."
+      },
+      "layout": "Single column list of tactile controls. Large segmented control for Presets (Aggressive/Balanced/Selective). Heavy numeric inputs for Fuel Price/MPG. Sliders for minimum $/mile."
+    }
+  ],
+  "images": {
+    "dashboard_empty_state": {
+      "url": "https://images.unsplash.com/photo-1547076286-60c93f1a3652?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwxfHxkYXJrJTIwYXV0b21vdGl2ZSUyMGRpZ2l0YWwlMjBkYXNoYm9hcmQlMjBjbHVzdGVyJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3ODgyNjE3Mzl8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Dark automotive digital dashboard cluster background"
+    },
+    "analytics_empty_state": {
+      "url": "https://images.unsplash.com/photo-1748439281934-2803c6a3ee36?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxmaW5hbmNpYWwlMjB0cmFkaW5nJTIwZGFyayUyMG1vZGUlMjBkYXNoYm9hcmQlMjBjaGFydCUyMGFic3RyYWN0JTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3ODgyNjE3Mzl8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Financial trading dark mode dashboard chart abstract background"
+    }
+  },
+  "haptics": {
+    "events": {
+      "start_shift": "heavy",
+      "scan_offer": "medium",
+      "verdict_success": "success",
+      "verdict_warning": "warning",
+      "verdict_error": "error",
+      "tab_switch": "light"
+    }
+  },
+  "instructions_to_main_agent": [
+    "CRITICAL: The Verdict Screen must be readable in under 1 second while driving. Use `5xl` or `4xl` Barlow Condensed typography for the main metrics ($ / mi / min). DO NOT cluster text closely.",
+    "Do not use blur/glass effects. Use solid `surfaceSecondary` and `surfaceTertiary` for depth to maximize contrast and OLED-readability.",
+    "Semantic colors (Green/Yellow/Red) MUST ONLY be used for verdicts or zone profitability. Do not use them decoratively. Use the `brand` (Amber) color for general interactive elements like the 'Start Shift' button.",
+    "Make all touch targets massive (minimum 56pt, preferably 76pt for core driver actions) as per automotive digital cluster design standards.",
+    "Keep font weights medium or bold, avoid ultra-thin or ultra-black weights as they bleed on dark high-contrast screens (especially in moving vehicles)."
+  ]
+}
