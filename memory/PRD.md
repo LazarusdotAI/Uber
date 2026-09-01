@@ -22,6 +22,7 @@ Production-ready cross-platform (iOS + Android) Expo/React Native + FastAPI + Mo
 ## Implemented (2026-09-01)
 - ✅ Verdict engine: gross & effective $/mile, gross & net $/hr, fuel/vehicle expense, net profit, profit/effective-mile, score 0–100, verdict (≥80/≥60), WHY reasons (positive/neutral/negative). Learning system blends restaurant wait history by confidence.
 - ✅ Offer input: AI screenshot scan (editable review), quick manual entry (large steppers), Live Capture screen (honest, provider-driven) with working demo pipeline.
+- ✅ Share to GigVerdict (native builds): iOS Share Extension + Android share intent via `expo-share-intent@5.1.1` (image sharing). Sharing an offer screenshot opens the app, auto-reads the image to base64, runs GPT-5.6 Luna OCR, and drops into the verdict flow. Guarded off in web/Expo Go. Build-time patch-package/xcode patch set up and verified.
 - ✅ Home dashboard: shift status, START/END shift with live timer, today net/$hr/$mile/deliveries, goal progress + pace ETA, scan/enter/auto-detect entries, best-move card.
 - ✅ Shift mode: start/end (idempotent active), live + historical metrics, today summary.
 - ✅ Zones + map: hot/neutral/dead zones w/ GPS radius (react-native-maps native + web fallback), CRUD, best zone / repositioning.
@@ -42,6 +43,5 @@ Production-ready cross-platform (iOS + Android) Expo/React Native + FastAPI + Mo
 
 ## Backlog / Next
 - P0: Android Accessibility Service native module + Expo config plugin (build-only).
-- P1: iOS Share Extension for one-tap screenshot scoring.
 - P1: End-of-shift recap; goal streaks/celebration.
 - P2: DoorDash/Grubhub-specific scan prompt tuning; export earnings CSV; per-zone historical hourly ranking using real deliveries.

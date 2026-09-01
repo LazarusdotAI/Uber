@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, ActivityIndicator, Linking, TextInput } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system/legacy";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
@@ -49,6 +50,7 @@ function Field({
 export default function Scan() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const params = useLocalSearchParams<{ sharedUri?: string }>();
   const { setLastScored, refreshDashboard } = useApp();
 
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -112,6 +114,31 @@ export default function Scan() {
       setScanning(false);
     }
   };
+
+  // Auto-handle a shared offer screenshot (iOS Share Extension / Android share):
+  // read the file to base64 and run OCR immediately, then user taps GET VERDICT.
+  useEffect(() => {
+    if (!params.sharedUri) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const uri = params.sharedUri as string;
+        setImageUri(uri);
+        const b64 = await FileSystem.readAsStringAsync(uri, { encoding: "base64" });
+        if (!cancelled) {
+          await runScan(b64, uri.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg");
+        }
+      } catch {
+        if (!cancelled) {
+          setError("Could not read the shared image. Choose one manually below.");
+          setFields({ payout: "", miles: "", minutes: "", restaurant: "", platform: "uber_eats" });
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [params.sharedUri]);
 
   const submit = async () => {
     if (!fields) return;

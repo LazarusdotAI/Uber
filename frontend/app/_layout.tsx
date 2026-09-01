@@ -1,18 +1,26 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { LogBox, View, ActivityIndicator, StyleSheet, Text } from "react-native";
+import { LogBox, View, ActivityIndicator, StyleSheet, Text, Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+import Constants, { ExecutionEnvironment } from "expo-constants";
+import { ShareIntentProvider, useShareIntentContext } from "expo-share-intent";
 
 import { useIconFonts } from "@/src/hooks/use-icon-fonts";
 import { appFontMap } from "@/src/theme/fonts";
 import { AuthProvider, useAuth } from "@/src/context/AuthContext";
 import { AppProvider } from "@/src/context/AppContext";
 import { colors, fonts } from "@/src/theme/tokens";
+
+// Share intent (iOS Share Extension / Android share) is native-only — disable
+// in the web preview and in Expo Go where the native module is absent.
+const SHARE_DISABLED =
+  Platform.OS === "web" ||
+  Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 
 // Disable logbox errors etc so that users can see the app.
 LogBox.ignoreAllLogs(true);
@@ -38,6 +46,7 @@ function Gate() {
   const { user, loading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const { hasShareIntent, shareIntent, resetShareIntent } = useShareIntentContext();
 
   useEffect(() => {
     if (loading) return;
@@ -45,6 +54,19 @@ function Gate() {
     if (!user && !inLogin) router.replace("/login");
     else if (user && inLogin) router.replace("/");
   }, [user, loading, segments, router]);
+
+  // A shared offer screenshot arrives (iOS Share Extension / Android share) →
+  // route it straight into the scan-and-score flow.
+  useEffect(() => {
+    if (loading || !user) return;
+    if (hasShareIntent && shareIntent?.files?.length) {
+      const file = shareIntent.files[0];
+      if (file?.path) {
+        router.push({ pathname: "/scan", params: { sharedUri: file.path } });
+        resetShareIntent();
+      }
+    }
+  }, [hasShareIntent, shareIntent, user, loading, router, resetShareIntent]);
 
   if (loading) return <BrandSplash />;
 
@@ -80,16 +102,18 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <KeyboardProvider>
-          <StatusBar style="light" />
-          <AuthProvider>
-            <AppProvider>
-              <Gate />
-            </AppProvider>
-          </AuthProvider>
-        </KeyboardProvider>
-      </SafeAreaProvider>
+      <ShareIntentProvider options={{ debug: false, resetOnBackground: true, disabled: SHARE_DISABLED }}>
+        <SafeAreaProvider>
+          <KeyboardProvider>
+            <StatusBar style="light" />
+            <AuthProvider>
+              <AppProvider>
+                <Gate />
+              </AppProvider>
+            </AuthProvider>
+          </KeyboardProvider>
+        </SafeAreaProvider>
+      </ShareIntentProvider>
     </GestureHandlerRootView>
   );
 }

@@ -69,6 +69,16 @@
             "./assets/fonts/DMSans-Bold.ttf"
           ]
         }
+      ],
+      [
+        "expo-share-intent",
+        {
+          "iosActivationRules": {
+            "NSExtensionActivationSupportsImageWithMaxCount": 1
+          },
+          "androidIntentFilters": ["image/*"],
+          "iosShareExtensionName": "GigVerdict"
+        }
       ]
     ],
     "experiments": {
